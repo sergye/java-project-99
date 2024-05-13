@@ -9,5 +9,8 @@ build:
 run:
 	./gradlew run
 
+start-prod:
+	./gradlew bootRun --args='--spring.profiles.active=prod'
+
 report:
 	./gradlew jacocoTestReport
