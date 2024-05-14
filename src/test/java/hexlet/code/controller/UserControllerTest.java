@@ -4,9 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import hexlet.code.exception.ResourceNotFoundException;
 import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
+import hexlet.code.util.ModelGenerator;
 import net.datafaker.Faker;
 import org.instancio.Instancio;
-import org.instancio.Select;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -30,17 +31,26 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 // END
 class ApplicationTest {
 
+    private static final Faker FAKER = new Faker();
+
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
-    private Faker faker;
+    private ModelGenerator modelGenerator;
 
     @Autowired
     private ObjectMapper om;
 
     @Autowired
     private UserRepository userRepository;
+
+    private User user;
+
+    @BeforeEach
+    public void setUp() {
+        user = Instancio.of(modelGenerator.getUserModel()).create();
+    }
 
 
     @Test
@@ -55,6 +65,7 @@ class ApplicationTest {
 
     @Test
     public void testIndex() throws Exception {
+        userRepository.save(user);
         var result = mockMvc.perform(get("/users"))
             .andExpect(status().isOk())
             .andReturn();
@@ -63,19 +74,10 @@ class ApplicationTest {
         assertThatJson(body).isArray();
     }
 
-    private User generateUser() {
-        return Instancio.of(User.class)
-            .ignore(Select.field(User::getId))
-            .supply(Select.field(User::getEmail), () -> faker.lorem().word())
-            .supply(Select.field(User::getFirstName), () -> faker.lorem().word())
-            .supply(Select.field(User::getLastName), () -> faker.lorem().word())
-            .create();
-    }
 
     // BEGIN
     @Test
     public void testShow() throws Exception {
-        var user = generateUser();
         userRepository.save(user);
 
         var result = mockMvc.perform(get("/users/" + user.getId()))
@@ -109,7 +111,6 @@ class ApplicationTest {
 
     @Test
     public void testUpdate() throws Exception {
-        var user = generateUser();
         userRepository.save(user);
 
         var data = new HashMap<>();
@@ -132,7 +133,6 @@ class ApplicationTest {
 
     @Test
     public void testDelete() throws Exception {
-        var user = generateUser();
         userRepository.save(user);
 
         mockMvc.perform(delete("/users/" + user.getId()))
