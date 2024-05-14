@@ -89,6 +89,7 @@ class ApplicationTest {
         assertThatJson(body).and(
             a -> a.node("email").isEqualTo(user.getEmail()),
             a -> a.node("firstName").isEqualTo(user.getFirstName())
+            a -> a.node("lastName").isEqualTo(user.getLastName())
         );
     }
 
