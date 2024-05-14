@@ -31,10 +31,8 @@ public class User {
     @GeneratedValue(strategy = IDENTITY)
     private long id;
 
-    @NotBlank
     private String firstName;
 
-    @NotBlank
     private String lastName;
 
     @Email
