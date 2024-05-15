@@ -137,7 +137,7 @@ class ApplicationTest {
         userRepository.save(user);
 
         mockMvc.perform(delete("/users/" + user.getId()))
-            .andExpect(status().isOk());
+            .andExpect(status().isNoContent());
 
         assertThat(userRepository.findById(user.getId())).isEmpty();
     }
