@@ -6,13 +6,13 @@ import lombok.Setter;
 @Setter
 @Getter
 public class UserDTO {
-	private Long id;
+    private Long id;
 
-	private String username;
+    private String username;
 
-	private String firstName;
+    private String firstName;
 
-	private String lastName;
+    private String lastName;
 
-	private String password;
+    private String password;
 }
