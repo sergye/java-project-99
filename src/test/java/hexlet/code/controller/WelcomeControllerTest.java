@@ -28,6 +28,4 @@ class WelcomeControllerTest {
         var body = result.getResponse().getContentAsString();
         assertThat(body).contains("Welcome to Spring!");
     }
-
-
 }
