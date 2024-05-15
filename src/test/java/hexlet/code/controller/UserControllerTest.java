@@ -1,6 +1,7 @@
 package hexlet.code.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hexlet.code.dto.UserUpdateDTO;
 import hexlet.code.exception.ResourceNotFoundException;
 import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
@@ -9,13 +10,12 @@ import net.datafaker.Faker;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.HashMap;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -95,41 +95,42 @@ class ApplicationTest {
 
     @Test
     public void testCreate() throws Exception {
-        var data = new HashMap<>();
-        data.put("title", "vasya@gmail.com");
-        data.put("firstName", "Vasya");
+        var userData = Instancio.of(modelGenerator.getUserModel()).create();
 
         mockMvc.perform(post("/users")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(om.writeValueAsString(data)))
+            .content(om.writeValueAsString(userData)))
             .andExpect(status().isCreated());
 
-        var user = userRepository.findByEmail("vasya@gmail.com")
+        var user = userRepository.findByEmail(userData.getEmail())
             .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        assertThat(user.getFirstName()).isEqualTo(("Vasya"));
+        assertThat(user.getFirstName()).isEqualTo((userData.getFirstName()));
+        assertThat(user.getLastName()).isEqualTo((userData.getLastName()));
+        assertThat(user.getEmail()).isEqualTo((userData.getEmail()));
+        assertThat(user.getPassword()).isEqualTo((userData.getPassword()));
     }
 
     @Test
     public void testUpdate() throws Exception {
         userRepository.save(user);
 
-        var data = new HashMap<>();
-        data.put("email", "vasya@gmail.com");
-        data.put("firstName", "Vasya");
+        UserUpdateDTO userData = new UserUpdateDTO();
+        userData.setFirstName(JsonNullable.of(FAKER.name().firstName()));
+        userData.setEmail(JsonNullable.of(FAKER.internet().emailAddress()));
 
         var request = put("/users/" + user.getId())
             .contentType(MediaType.APPLICATION_JSON)
-            .content(om.writeValueAsString(data));
+            .content(om.writeValueAsString(userData));
 
         mockMvc.perform(request)
             .andExpect(status().isOk());
 
-        user = userRepository.findById(user.getId())
+        var updatedUser = userRepository.findById(user.getId())
             .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        assertThat(user.getEmail()).isEqualTo(("vasya@gmail.com"));
-        assertThat(user.getFirstName()).isEqualTo(("Vasya"));
+        assertThat(updatedUser.getFirstName()).isEqualTo((userData.getFirstName().get()));
+        assertThat(updatedUser.getEmail()).isEqualTo((userData.getEmail().get()));
     }
 
     @Test
