@@ -52,17 +52,6 @@ class ApplicationTest {
         user = Instancio.of(modelGenerator.getUserModel()).create();
     }
 
-
-    @Test
-    public void testWelcomePage() throws Exception {
-        var result = mockMvc.perform(get("/welcome"))
-            .andExpect(status().isOk())
-            .andReturn();
-
-        var body = result.getResponse().getContentAsString();
-        assertThat(body).contains("Welcome to Spring!");
-    }
-
     @Test
     public void testIndex() throws Exception {
         userRepository.save(user);
