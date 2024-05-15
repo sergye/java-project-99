@@ -25,10 +25,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-// BEGIN
+
 @SpringBootTest
 @AutoConfigureMockMvc
-// END
+
 class ApplicationTest {
 
     private static final Faker FAKER = new Faker();
@@ -74,8 +74,6 @@ class ApplicationTest {
         assertThatJson(body).isArray();
     }
 
-
-    // BEGIN
     @Test
     public void testShow() throws Exception {
         userRepository.save(user);
@@ -142,5 +140,4 @@ class ApplicationTest {
 
         assertThat(userRepository.findById(user.getId())).isEmpty();
     }
-    // END
 }
