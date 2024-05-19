@@ -43,8 +43,8 @@ public class UsersController {
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDTO create(@Valid @RequestBody UserCreateDTO userData) {
-        var user = userMapper.map(userData);
+    public UserDTO create(@Valid @RequestBody UserCreateDTO userCreateDTO) {
+        var user = userMapper.map(userCreateDTO);
         userRepository.save(user);
         return userMapper.map(user);
     }
