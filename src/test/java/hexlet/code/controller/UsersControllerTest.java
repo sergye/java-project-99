@@ -1,6 +1,7 @@
 package hexlet.code.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hexlet.code.component.DefaultUserProperties;
 import hexlet.code.dto.UserUpdateDTO;
 import hexlet.code.exception.ResourceNotFoundException;
 import hexlet.code.model.User;
@@ -17,6 +18,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Optional;
+
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -29,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 
-class ApplicationTest {
+class UsersControllerTest {
 
     private static final Faker FAKER = new Faker();
 
@@ -45,6 +48,9 @@ class ApplicationTest {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private DefaultUserProperties defaultUserProperties;
+
     private User user;
 
     @BeforeEach
@@ -55,7 +61,7 @@ class ApplicationTest {
     @Test
     public void testIndex() throws Exception {
         userRepository.save(user);
-        var result = mockMvc.perform(get("/users"))
+        var result = mockMvc.perform(get("/api/users"))
             .andExpect(status().isOk())
             .andReturn();
 
@@ -67,7 +73,7 @@ class ApplicationTest {
     public void testShow() throws Exception {
         userRepository.save(user);
 
-        var result = mockMvc.perform(get("/users/" + user.getId()))
+        var result = mockMvc.perform(get("/api/users/" + user.getId()))
             .andExpect(status().isOk())
             .andReturn();
 
@@ -84,7 +90,7 @@ class ApplicationTest {
     public void testCreate() throws Exception {
         var userData = Instancio.of(modelGenerator.getUserModel()).create();
 
-        mockMvc.perform(post("/users")
+        mockMvc.perform(post("/api/users")
             .contentType(MediaType.APPLICATION_JSON)
             .content(om.writeValueAsString(userData)))
             .andExpect(status().isCreated());
@@ -106,7 +112,7 @@ class ApplicationTest {
         userData.setFirstName(JsonNullable.of(FAKER.name().firstName()));
         userData.setEmail(JsonNullable.of(FAKER.internet().emailAddress()));
 
-        var request = put("/users/" + user.getId())
+        var request = put("/api/users/" + user.getId())
             .contentType(MediaType.APPLICATION_JSON)
             .content(om.writeValueAsString(userData));
 
@@ -124,9 +130,21 @@ class ApplicationTest {
     public void testDelete() throws Exception {
         userRepository.save(user);
 
-        mockMvc.perform(delete("/users/" + user.getId()))
+        mockMvc.perform(delete("/api/users/" + user.getId()))
             .andExpect(status().isNoContent());
 
         assertThat(userRepository.findById(user.getId())).isEmpty();
+    }
+
+    @Test
+    public void testCreateDefaultUser() {
+        String email = defaultUserProperties.getEmail();
+        Optional<User> userOptional = userRepository.findByEmail(email);
+
+        assertThat(userOptional).isPresent();
+        User user = userOptional.get();
+
+        assertThat(user.getEmail()).isEqualTo(defaultUserProperties.getEmail());
+        assertThat(user.getPassword()).isEqualTo(defaultUserProperties.getPassword());
     }
 }
