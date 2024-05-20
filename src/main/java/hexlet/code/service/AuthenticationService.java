@@ -9,19 +9,19 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AuthenticationService {
-	@Autowired
-	private JWTUtils jwtUtils;
+    @Autowired
+    private JWTUtils jwtUtils;
 
-	@Autowired
-	private AuthenticationManager authenticationManager;
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
-	public String generateAuthToken(AuthRequest authRequest) {
-		UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-				authRequest.getUsername(), authRequest.getPassword()
-		);
+    public String generateAuthToken(AuthRequest authRequest) {
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                authRequest.getUsername(), authRequest.getPassword()
+        );
 
-		authenticationManager.authenticate(authentication);
+        authenticationManager.authenticate(authentication);
 
-		return jwtUtils.generateToken(authRequest.getUsername());
-	}
+        return jwtUtils.generateToken(authRequest.getUsername());
+    }
 }
