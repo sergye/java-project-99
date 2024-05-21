@@ -18,6 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -78,8 +79,15 @@ class UsersControllerTest {
     }
 
     @Test
+    public void testUnauthenticatedAccess() throws Exception {
+        mockMvc.perform(get("/api/users"))
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized())
+                .andReturn();
+    }
+
+    @Test
     public void testIndex() throws Exception {
-        var result = mockMvc.perform(get("/api/users").with(jwt()))
+        var result = mockMvc.perform(get("/api/users").with(token))
                 .andExpect(status().isOk())
                 .andReturn();
 
