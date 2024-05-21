@@ -46,7 +46,7 @@ public class User implements BaseEntity, UserDetails {
 
     @NotBlank
     @Size(min = 3)
-    private String passwordDigest;
+    private String password;
 
     @CreatedDate
     private LocalDate createdAt;
@@ -57,11 +57,6 @@ public class User implements BaseEntity, UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return new ArrayList<>();
-    }
-
-    @Override
-    public String getPassword() {
-        return passwordDigest;
     }
 
     @Override
