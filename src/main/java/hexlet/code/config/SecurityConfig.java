@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer.FrameOptionsConfig;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -18,6 +19,7 @@ import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 import hexlet.code.service.CustomUserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
+
 
 @Configuration
 @EnableWebSecurity
@@ -36,11 +38,14 @@ public class SecurityConfig {
             throws Exception {
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**").disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/").permitAll()
+                        .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers("/api/login").permitAll()
                         .requestMatchers("/welcome").permitAll()
                         .anyRequest().authenticated())
+                .headers(headers -> headers.frameOptions(FrameOptionsConfig::disable))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .oauth2ResourceServer(rs -> rs.jwt(jwt -> jwt.decoder(jwtDecoder)))
                 .httpBasic(Customizer.withDefaults())
