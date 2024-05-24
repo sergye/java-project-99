@@ -172,6 +172,6 @@ class UsersControllerTest {
         User user = userOptional.get();
 
         assertThat(user.getEmail()).isEqualTo(defaultUserProperties.getEmail());
-        assertThat(user.getPassword()).isEqualTo(defaultUserProperties.getPassword());
+        assertThat(user.getPassword()).isNotEqualTo(defaultUserProperties.getPassword());
     }
 }

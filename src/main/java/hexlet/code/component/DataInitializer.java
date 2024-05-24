@@ -5,6 +5,7 @@ import hexlet.code.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 
@@ -25,6 +26,9 @@ public class DataInitializer implements ApplicationRunner {
     @Autowired
     private DefaultUserProperties defaultUserProperties;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Override
     public void run(ApplicationArguments args) throws Exception {
         createDefaultUser();
@@ -42,8 +46,9 @@ public class DataInitializer implements ApplicationRunner {
                 userData.setEmail(email);
 
                 String password = defaultUserProperties.getPassword();
+                String passwordDigest = passwordEncoder.encode(password);
 
-                userData.setPassword(password);
+                userData.setPassword(passwordDigest);
 
                 User user = userMapper.map(userData);
                 userRepository.save(user);
