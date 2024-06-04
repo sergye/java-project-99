@@ -41,6 +41,7 @@ public class DataInitializer implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         createDefaultUser();
+        createDefaultTaskStatuses();
     }
 
     private void createDefaultUser() {
