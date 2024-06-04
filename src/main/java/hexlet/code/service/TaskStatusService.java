@@ -3,6 +3,7 @@ package hexlet.code.service;
 import hexlet.code.dto.status.TaskStatusCreateDTO;
 import hexlet.code.dto.status.TaskStatusDTO;
 import hexlet.code.dto.status.TaskStatusUpdateDTO;
+import hexlet.code.exception.ResourceAlreadyExistsException;
 import hexlet.code.exception.ResourceNotFoundException;
 import hexlet.code.mapper.TaskStatusMapper;
 import hexlet.code.repository.TaskStatusRepository;
@@ -41,13 +42,13 @@ public class TaskStatusService {
 
 	public TaskStatusDTO findById(Long id) {
 		var taskStatus = repository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Not Found: " + id));
+				.orElseThrow(() -> new ResourceNotFoundException("Status not Found: " + id));
 		return taskStatusMapper.map(taskStatus);
 	}
 
 	public TaskStatusDTO update(TaskStatusUpdateDTO taskStatusUpdateDTO, Long id) {
 		var taskStatus = repository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Not Found: " + id));
+				.orElseThrow(() -> new ResourceNotFoundException("Status not Found: " + id));
 		taskStatusMapper.update(taskStatusUpdateDTO, taskStatus);
 		repository.save(taskStatus);
 		return taskStatusMapper.map(taskStatus);
