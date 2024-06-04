@@ -2,7 +2,7 @@ package hexlet.code.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hexlet.code.component.DefaultUserProperties;
-import hexlet.code.dto.UserUpdateDTO;
+import hexlet.code.dto.user.UserUpdateDTO;
 import hexlet.code.exception.ResourceNotFoundException;
 import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;

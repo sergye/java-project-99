@@ -26,21 +26,21 @@ import java.time.LocalDate;
 @Setter
 public class TaskStatus implements BaseEntity {
 
-	@Id
-	@GeneratedValue(strategy = IDENTITY)
-	private long id;
+    @Id
+    @GeneratedValue(strategy = IDENTITY)
+    private long id;
 
-	@Size(min = 1)
-	@Column(nullable = false, unique = true)
-	private String name;
+    @Size(min = 1)
+    @Column(nullable = false, unique = true)
+    private String name;
 
-	@Size(min = 1)
-	@Column(nullable = false, unique = true)
-	private String slug;
+    @Size(min = 1)
+    @Column(nullable = false, unique = true)
+    private String slug;
 
-	@CreatedDate
-	private LocalDate createdAt;
+    @CreatedDate
+    private LocalDate createdAt;
 
-	@LastModifiedDate
-	private LocalDate updatedAt;
+    @LastModifiedDate
+    private LocalDate updatedAt;
 }
