@@ -1,6 +1,12 @@
 package hexlet.code.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
@@ -22,28 +28,28 @@ import java.time.LocalDate;
 @Setter
 public class Task implements BaseEntity {
 
-	@Id
-	@GeneratedValue(strategy = IDENTITY)
-	private long id;
+    @Id
+    @GeneratedValue(strategy = IDENTITY)
+    private long id;
 
-	@Size(min = 1)
-	private String name;
+    @Size(min = 1)
+    private String name;
 
-	private long index;
+    private long index;
 
-	private String description;
+    private String description;
 
-	@JoinColumn(name = "task_status_id")
-	@ManyToOne
-	private TaskStatus taskStatus;
+    @JoinColumn(name = "task_status_id")
+    @ManyToOne
+    private TaskStatus taskStatus;
 
-	@JoinColumn(name = "assignee_id")
-	@ManyToOne
-	private User assignee;
+    @JoinColumn(name = "assignee_id")
+    @ManyToOne
+    private User assignee;
 
-	@CreatedDate
-	private LocalDate createdAt;
+    @CreatedDate
+    private LocalDate createdAt;
 
-	@LastModifiedDate
-	private LocalDate updatedAt;
+    @LastModifiedDate
+    private LocalDate updatedAt;
 }
