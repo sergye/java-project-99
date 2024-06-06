@@ -149,7 +149,7 @@ class TaskControllerTest {
 
         Task task = taskOptional.get();
 
-        assertThat(task.getName()).isEqualTo(taskCreateDTO.getTitle());
+        assertThat(task.getTaskStatus().getSlug()).isEqualTo(taskCreateDTO.getStatus().get());
     }
 
     @Test
