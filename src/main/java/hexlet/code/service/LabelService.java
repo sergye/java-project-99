@@ -37,8 +37,6 @@ public class LabelService {
         return labelMapper.map(label);
     }
 
-
-
     public LabelDTO update(LabelUpdateDTO labelUpdateDTO, Long id) {
         var label = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Label not Found: " + id));
@@ -46,7 +44,6 @@ public class LabelService {
         repository.save(label);
         return labelMapper.map(label);
     }
-
 
     public void delete(Long id) {
         repository.deleteById(id);
