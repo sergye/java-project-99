@@ -34,13 +34,13 @@ public class UserService {
 
     public UserDTO findById(Long id) {
         var user = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Not Found: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("User not Found: " + id));
         return userMapper.map(user);
     }
 
     public UserDTO update(UserUpdateDTO userUpdateDTO, Long id) {
         var user = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Not Found: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("User not Found: " + id));
         userMapper.update(userUpdateDTO, user);
         repository.save(user);
         return userMapper.map(user);
