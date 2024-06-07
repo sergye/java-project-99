@@ -4,9 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import hexlet.code.component.DefaultUserProperties;
 import hexlet.code.dto.task.TaskCreateDTO;
 import hexlet.code.dto.task.TaskUpdateDTO;
+import hexlet.code.model.Label;
 import hexlet.code.model.Task;
 import hexlet.code.model.TaskStatus;
 import hexlet.code.model.User;
+import hexlet.code.repository.LabelRepository;
 import hexlet.code.repository.TaskRepository;
 import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.repository.UserRepository;
@@ -28,6 +30,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
+import java.util.Set;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -47,6 +50,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class TaskControllerTest {
 
     private static final Faker FAKER = new Faker();
+
+    @Autowired
+    private LabelRepository labelRepository;
 
     @Autowired
     private WebApplicationContext wac;
@@ -88,10 +94,16 @@ class TaskControllerTest {
         User assignee = userRepository.findById(1L).get();
         TaskStatus status = taskStatusRepository.findBySlug("draft").get();
 
+        Set<Label> labels = Set.of(
+                labelRepository.findByName("bug").get(),
+                labelRepository.findByName("feature").get()
+        );
+
         task = Instancio.of(modelGenerator.getTaskModel()).create();
 
         task.setAssignee(assignee);
         task.setTaskStatus(status);
+        task.setLabels(labels);
 
         taskRepository.save(task);
     }
@@ -184,5 +196,4 @@ class TaskControllerTest {
 
         assertThat(taskRepository.findById(task.getId())).isEmpty();
     }
-
 }

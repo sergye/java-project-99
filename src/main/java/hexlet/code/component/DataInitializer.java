@@ -1,9 +1,12 @@
 package hexlet.code.component;
 
+import hexlet.code.dto.label.LabelCreateDTO;
 import hexlet.code.dto.status.TaskStatusCreateDTO;
 import hexlet.code.dto.user.UserCreateDTO;
+import hexlet.code.mapper.LabelMapper;
 import hexlet.code.mapper.TaskStatusMapper;
 import hexlet.code.mapper.UserMapper;
+import hexlet.code.repository.LabelRepository;
 import hexlet.code.repository.TaskStatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -20,6 +23,12 @@ import lombok.AllArgsConstructor;
 @Component
 @AllArgsConstructor
 public class DataInitializer implements ApplicationRunner {
+    @Autowired
+    private LabelRepository labelRepository;
+
+    @Autowired
+    private LabelMapper labelMapper;
+
     @Autowired
     private TaskStatusRepository taskStatusRepository;
 
@@ -42,6 +51,7 @@ public class DataInitializer implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         createDefaultUser();
         createDefaultTaskStatuses();
+        createDefaultLabels();
     }
 
     private void createDefaultUser() {
@@ -98,6 +108,19 @@ public class DataInitializer implements ApplicationRunner {
             taskStatusRepository.save(taskStatusMapper.map(toBeFixedDTO));
             taskStatusRepository.save(taskStatusMapper.map(toPublishDTO));
             taskStatusRepository.save(taskStatusMapper.map(publishedDTO));
+        }
+    }
+
+    private void createDefaultLabels() {
+        if (labelRepository.findAll().isEmpty()) {
+            LabelCreateDTO bugLabelDTO = new LabelCreateDTO();
+            bugLabelDTO.setName("bug");
+
+            LabelCreateDTO featureLabelDTO = new LabelCreateDTO();
+            featureLabelDTO.setName("feature");
+
+            labelRepository.save(labelMapper.map(bugLabelDTO));
+            labelRepository.save(labelMapper.map(featureLabelDTO));
         }
     }
 }

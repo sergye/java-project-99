@@ -3,6 +3,7 @@ package hexlet.code.mapper;
 import hexlet.code.dto.task.TaskCreateDTO;
 import hexlet.code.dto.task.TaskDTO;
 import hexlet.code.dto.task.TaskUpdateDTO;
+import hexlet.code.model.Label;
 import hexlet.code.model.Task;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
@@ -11,6 +12,9 @@ import org.mapstruct.MappingConstants;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
+
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Mapper(
         uses = { JsonNullableMapper.class, ReferenceMapper.class },
@@ -37,4 +41,10 @@ public abstract class TaskMapper {
     @Mapping(source = "content", target = "description")
     @Mapping(target = "taskStatus", ignore = true)
     public abstract void update(TaskUpdateDTO dto, @MappingTarget Task model);
+
+    Set<Long> mapLabelsToIds(Set<Label> labels) {
+        return labels.stream()
+                .map(Label::getId)
+                .collect(Collectors.toSet());
+    }
 }

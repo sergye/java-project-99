@@ -1,10 +1,12 @@
 package hexlet.code.model;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Entity;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
@@ -19,6 +21,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Entity
@@ -46,6 +50,12 @@ public class Task implements BaseEntity {
     @JoinColumn(name = "assignee_id")
     @ManyToOne
     private User assignee;
+
+    @ManyToMany
+    @JoinTable(name = "tasks_labels",
+            joinColumns = @JoinColumn(name = "task_id"),
+            inverseJoinColumns = @JoinColumn(name = "labels_id"))
+    private Set<Label> labels = new HashSet<>();
 
     @CreatedDate
     private LocalDate createdAt;
