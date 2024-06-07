@@ -33,6 +33,7 @@ dependencies {
 	implementation("net.datafaker:datafaker:2.0.2")
 	implementation("org.instancio:instancio-junit:3.3.1")
 	implementation("org.openapitools:jackson-databind-nullable:0.2.6")
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
 
 	annotationProcessor("org.mapstruct:mapstruct-processor:1.5.5.Final")
 	runtimeOnly("com.h2database:h2")
