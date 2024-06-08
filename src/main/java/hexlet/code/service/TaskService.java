@@ -1,7 +1,9 @@
 package hexlet.code.service;
 
+import hexlet.code.component.TaskSpec;
 import hexlet.code.dto.task.TaskCreateDTO;
 import hexlet.code.dto.task.TaskDTO;
+import hexlet.code.dto.task.TaskFilterDTO;
 import hexlet.code.dto.task.TaskUpdateDTO;
 import hexlet.code.exception.ResourceAlreadyExistsException;
 import hexlet.code.exception.ResourceNotFoundException;
@@ -16,6 +18,7 @@ import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.repository.UserRepository;
 import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -40,8 +43,13 @@ public class TaskService {
     @Autowired
     private TaskMapper taskMapper;
 
-    public List<TaskDTO> getAll() {
-        return taskRepository.findAll().stream()
+    @Autowired
+    private TaskSpec taskSpec;
+
+    public List<TaskDTO> getAll(TaskFilterDTO filter) {
+        Specification<Task> spec = taskSpec.build(filter);
+
+        return taskRepository.findAll(spec).stream()
                 .map(taskMapper::map)
                 .toList();
     }

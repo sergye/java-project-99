@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import hexlet.code.component.DefaultUserProperties;
 import hexlet.code.dto.task.TaskCreateDTO;
 import hexlet.code.dto.task.TaskUpdateDTO;
+import hexlet.code.mapper.TaskMapper;
 import hexlet.code.model.Label;
 import hexlet.code.model.Task;
 import hexlet.code.model.TaskStatus;
@@ -68,6 +69,9 @@ class TaskControllerTest {
     private ObjectMapper om;
 
     @Autowired
+    private TaskMapper taskMapper;
+
+    @Autowired
     private TaskRepository taskRepository;
 
     @Autowired
@@ -124,6 +128,26 @@ class TaskControllerTest {
 
         var body = result.getResponse().getContentAsString();
         assertThatJson(body).isArray();
+    }
+
+    public void testFilter() throws Exception {
+        var titleCont = task.getName().substring(0, task.getName().length() / 2);
+        var assigneeId = task.getAssignee().getId();
+
+        var status = task.getTaskStatus().getSlug();
+        var labelId = task.getLabels().stream().findFirst().get().getId();
+
+        var result = mockMvc.perform(get("/api/tasks").with(token)
+                        .param("titleCont", titleCont)
+                        .param("assigneeId", Long.toString(assigneeId))
+                        .param("status", status)
+                        .param("labelId", Long.toString(labelId)))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String body = result.getResponse().getContentAsString();
+
+        assertThatJson(body).isArray().contains(om.writeValueAsString(taskMapper.map(task)));
     }
 
     @Test

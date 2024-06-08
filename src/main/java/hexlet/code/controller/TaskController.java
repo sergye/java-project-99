@@ -4,6 +4,7 @@ import java.util.List;
 
 import hexlet.code.dto.task.TaskCreateDTO;
 import hexlet.code.dto.task.TaskDTO;
+import hexlet.code.dto.task.TaskFilterDTO;
 import hexlet.code.dto.task.TaskUpdateDTO;
 import hexlet.code.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +29,8 @@ public class TaskController {
     private TaskService taskService;
 
     @GetMapping
-    ResponseEntity<List<TaskDTO>> index() {
-        List<TaskDTO> tasks = taskService.getAll();
+    ResponseEntity<List<TaskDTO>> index(TaskFilterDTO filter) {
+        List<TaskDTO> tasks = taskService.getAll(filter);
 
         return ResponseEntity.ok()
                 .header("X-Total-Count", String.valueOf(tasks.size()))
