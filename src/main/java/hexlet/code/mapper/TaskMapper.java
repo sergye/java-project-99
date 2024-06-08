@@ -33,6 +33,7 @@ public abstract class TaskMapper {
     @Mapping(source = "description", target = "content")
     @Mapping(source = "taskStatus.slug", target = "status")
     @Mapping(source = "assignee.id", target = "assigneeId")
+    @Mapping(target = "taskLabelIds", expression = "java(mapLabelsToIds(model.getLabels()))")
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.SET_TO_NULL)
     public abstract TaskDTO map(Task model);
 

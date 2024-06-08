@@ -6,9 +6,11 @@ import hexlet.code.dto.task.TaskUpdateDTO;
 import hexlet.code.exception.ResourceAlreadyExistsException;
 import hexlet.code.exception.ResourceNotFoundException;
 import hexlet.code.mapper.TaskMapper;
+import hexlet.code.model.Label;
 import hexlet.code.model.Task;
 import hexlet.code.model.TaskStatus;
 import hexlet.code.model.User;
+import hexlet.code.repository.LabelRepository;
 import hexlet.code.repository.TaskRepository;
 import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.repository.UserRepository;
@@ -16,10 +18,16 @@ import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class TaskService {
+    @Autowired
+    private LabelRepository labelRepository;
+
     @Autowired
     private TaskRepository taskRepository;
 
@@ -71,15 +79,16 @@ public class TaskService {
     }
 
     private void setTaskData(Task task, TaskCreateDTO taskCreateDTO) {
-        setTaskData(task, taskCreateDTO.getAssigneeId(), taskCreateDTO.getStatus());
+        setTaskData(task, taskCreateDTO.getAssigneeId(), taskCreateDTO.getStatus(), taskCreateDTO.getTaskLabelIds());
     }
 
     private void setTaskData(Task task, TaskUpdateDTO taskUpdateDTO) {
-        setTaskData(task, taskUpdateDTO.getAssigneeId(), taskUpdateDTO.getStatus());
+        setTaskData(task, taskUpdateDTO.getAssigneeId(), taskUpdateDTO.getStatus(), taskUpdateDTO.getTaskLabelIds());
     }
 
 
-    private void setTaskData(Task task, JsonNullable<Long> assigneeId, JsonNullable<String> status) {
+    private void setTaskData(Task task, JsonNullable<Long> assigneeId,
+                             JsonNullable<String> status, JsonNullable<Set<Long>> labelIds) {
 
         if (assigneeId != null) {
             User newAssignee = null;
@@ -101,6 +110,20 @@ public class TaskService {
             }
 
             task.setTaskStatus(newStatus);
+        }
+
+        if (labelIds != null) {
+            Set<Label> newLabels = new HashSet<>();
+
+            if (labelIds.get() != null) {
+                newLabels = labelIds.get().stream()
+                        .map(labelId -> labelRepository.findById(labelId)
+                                .orElseThrow(() ->
+                                        new ResourceNotFoundException("Label with id=" + labelId + " not found")))
+                        .collect(Collectors.toSet());
+            }
+
+            task.setLabels(newLabels);
         }
     }
 }

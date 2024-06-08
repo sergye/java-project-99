@@ -31,6 +31,7 @@ import org.springframework.web.context.WebApplicationContext;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -134,9 +135,14 @@ class TaskControllerTest {
 
         var body = result.getResponse().getContentAsString();
 
+        var taskLabelIds = task.getLabels().stream()
+                .map(Label::getId)
+                .collect(Collectors.toSet());
+
         assertThatJson(body).and(
                 a -> a.node("id").isEqualTo(task.getId()),
-                a -> a.node("title").isEqualTo(task.getName())
+                a -> a.node("title").isEqualTo(task.getName()),
+                a -> a.node("taskLabelIds").isEqualTo(taskLabelIds)
         );
     }
 
