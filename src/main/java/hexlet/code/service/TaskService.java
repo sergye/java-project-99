@@ -1,6 +1,6 @@
 package hexlet.code.service;
 
-import hexlet.code.component.TaskSpec;
+import hexlet.code.component.TaskSpecification;
 import hexlet.code.dto.task.TaskCreateDTO;
 import hexlet.code.dto.task.TaskDTO;
 import hexlet.code.dto.task.TaskFilterDTO;
@@ -44,10 +44,10 @@ public class TaskService {
     private TaskMapper taskMapper;
 
     @Autowired
-    private TaskSpec taskSpec;
+    private TaskSpecification taskSpecification;
 
     public List<TaskDTO> getAll(TaskFilterDTO filter) {
-        Specification<Task> spec = taskSpec.build(filter);
+        Specification<Task> spec = taskSpecification.build(filter);
 
         return taskRepository.findAll(spec).stream()
                 .map(taskMapper::map)
@@ -99,30 +99,25 @@ public class TaskService {
                              JsonNullable<String> status, JsonNullable<Set<Long>> labelIds) {
 
         if (assigneeId != null) {
-            User newAssignee = null;
-
+            User newAssignee = new User();
             if (assigneeId.get() != null && assigneeId.get() != 0) {
                 newAssignee = userRepository.findById(assigneeId.get())
                         .orElseThrow(() -> new ResourceNotFoundException("Assignee not found"));
             }
-
             task.setAssignee(newAssignee);
         }
 
         if (status != null) {
-            TaskStatus newStatus = null;
-
+            TaskStatus newStatus = new TaskStatus();
             if (status.get() != null) {
                 newStatus = taskStatusRepository.findBySlug(status.get())
                         .orElseThrow(() -> new ResourceNotFoundException("Status not found"));
             }
-
             task.setTaskStatus(newStatus);
         }
 
         if (labelIds != null) {
             Set<Label> newLabels = new HashSet<>();
-
             if (labelIds.get() != null) {
                 newLabels = labelIds.get().stream()
                         .map(labelId -> labelRepository.findById(labelId)
@@ -130,7 +125,6 @@ public class TaskService {
                                         new ResourceNotFoundException("Label with id=" + labelId + " not found")))
                         .collect(Collectors.toSet());
             }
-
             task.setLabels(newLabels);
         }
     }

@@ -7,7 +7,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TaskSpec {
+public class TaskSpecification {
     public Specification<Task> build(TaskFilterDTO params) {
         return withNameCont(params.getTitleCont())
                 .and(withAssigneeId(params.getAssigneeId()))
