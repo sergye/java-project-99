@@ -9,7 +9,6 @@ import jakarta.persistence.GeneratedValue;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -30,25 +29,27 @@ import java.util.Collection;
 @Getter
 @Setter
 public class User implements BaseEntity, UserDetails {
-
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column(nullable = false, unique = true)
     private long id;
 
+    @Column
     private String firstName;
 
+    @Column
     private String lastName;
 
     @Email
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
 
-    @NotBlank
     @Size(min = 3)
+    @Column(nullable = false)
     private String password;
 
     @CreatedDate
+    @Column
     private LocalDate createdAt;
 
     @Override

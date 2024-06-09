@@ -1,5 +1,6 @@
 package hexlet.code.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
@@ -30,16 +31,19 @@ import java.util.Set;
 @Getter
 @Setter
 public class Task implements BaseEntity {
-
     @Id
     @GeneratedValue(strategy = IDENTITY)
+    @Column(nullable = false, unique = true)
     private long id;
 
     @Size(min = 1)
+    @Column
     private String name;
 
+    @Column
     private long index;
 
+    @Column
     private String description;
 
     @JoinColumn(name = "task_status_id")
@@ -57,5 +61,6 @@ public class Task implements BaseEntity {
     private Set<Label> labels = new HashSet<>();
 
     @CreatedDate
+    @Column
     private LocalDate createdAt;
 }
