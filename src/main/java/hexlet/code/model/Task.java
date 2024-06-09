@@ -34,14 +34,14 @@ public class Task implements BaseEntity {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column(nullable = false, unique = true)
-    private long id;
+    private Long id;
 
     @Size(min = 1)
     @Column
     private String name;
 
     @Column
-    private long index;
+    private Long index;
 
     @Column
     private String description;

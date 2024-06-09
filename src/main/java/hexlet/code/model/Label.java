@@ -23,7 +23,7 @@ import java.time.LocalDate;
 public class Label implements BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Size(min = 3, max = 1000)
     @Column(nullable = false, unique = true)

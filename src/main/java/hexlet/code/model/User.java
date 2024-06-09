@@ -32,7 +32,7 @@ public class User implements BaseEntity, UserDetails {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column(nullable = false, unique = true)
-    private long id;
+    private Long id;
 
     @Column
     private String firstName;
