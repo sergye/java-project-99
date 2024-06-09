@@ -1,6 +1,6 @@
 <h1>Task Manager</h1>
 
-<p>Task Manager – task management system based on Spring.
+<p>Task Manager is a simple Spring based task managing system.
 It allows you to set tasks, assign executors and change their statuses.
 Registration and authentication are required.</p>
 <p>
@@ -11,4 +11,4 @@ Registration and authentication are required.</p>
 <a href="https://codeclimate.com/github/sergye/java-project-99/maintainability"><img src="https://api.codeclimate.com/v1/badges/602f0e2a49d37f9b89c0/maintainability" /></a>
 <a href="https://codeclimate.com/github/sergye/java-project-99/test_coverage"><img src="https://api.codeclimate.com/v1/badges/602f0e2a49d37f9b89c0/test_coverage" /></a>
 
-Try app here https://java-project-99-hjiz.onrender.com
+Try app here: https://java-project-99-hjiz.onrender.com
