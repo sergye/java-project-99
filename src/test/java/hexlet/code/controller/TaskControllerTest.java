@@ -130,6 +130,7 @@ class TaskControllerTest {
         assertThatJson(body).isArray();
     }
 
+    @Test
     public void testFilter() throws Exception {
         var titleCont = task.getName().substring(0, task.getName().length() / 2);
         var assigneeId = task.getAssignee().getId();
