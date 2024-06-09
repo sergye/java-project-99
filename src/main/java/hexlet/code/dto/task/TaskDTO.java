@@ -22,5 +22,4 @@ public class TaskDTO {
     private Set<Long> taskLabelIds;
 
     private LocalDate createdAt;
-    private LocalDate updatedAt;
 }

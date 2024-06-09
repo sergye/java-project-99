@@ -12,5 +12,4 @@ public class TaskStatusDTO {
     private String name;
     private String slug;
     private LocalDate createdAt;
-    private LocalDate updatedAt;
 }
