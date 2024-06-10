@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import hexlet.code.component.DefaultUserProperties;
 import hexlet.code.dto.task.TaskCreateDTO;
 import hexlet.code.dto.task.TaskUpdateDTO;
+import hexlet.code.exception.ResourceNotFoundException;
 import hexlet.code.mapper.TaskMapper;
 import hexlet.code.model.Label;
 import hexlet.code.model.Task;
@@ -96,12 +97,16 @@ class TaskControllerTest {
 
         token = jwt().jwt(builder -> builder.subject(defaultUserProperties.getEmail()));
 
-        User assignee = userRepository.findById(1L).get();
-        TaskStatus status = taskStatusRepository.findBySlug("draft").get();
+        User assignee = userRepository.findById(1L)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        TaskStatus status = taskStatusRepository.findBySlug("draft")
+                .orElseThrow(() -> new ResourceNotFoundException("Status not found"));
 
         Set<Label> labels = Set.of(
-                labelRepository.findByName("bug").get(),
-                labelRepository.findByName("feature").get()
+                labelRepository.findByName("bug")
+                        .orElseThrow(() -> new ResourceNotFoundException("Label not found")),
+                labelRepository.findByName("feature")
+                        .orElseThrow(() -> new ResourceNotFoundException("Label not found"))
         );
 
         task = Instancio.of(modelGenerator.getTaskModel()).create();
