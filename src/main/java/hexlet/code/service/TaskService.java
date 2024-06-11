@@ -21,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -99,7 +98,7 @@ public class TaskService {
                              JsonNullable<String> status, JsonNullable<Set<Long>> labelIds) {
 
         if (assigneeId != null) {
-            User newAssignee = new User();
+            User newAssignee = null;
             if (assigneeId.get() != null && assigneeId.get() != 0) {
                 newAssignee = userRepository.findById(assigneeId.get())
                         .orElseThrow(() -> new ResourceNotFoundException("Assignee not found"));
@@ -108,7 +107,7 @@ public class TaskService {
         }
 
         if (status != null) {
-            TaskStatus newStatus = new TaskStatus();
+            TaskStatus newStatus = null;
             if (status.get() != null) {
                 newStatus = taskStatusRepository.findBySlug(status.get())
                         .orElseThrow(() -> new ResourceNotFoundException("Status not found"));
@@ -117,7 +116,7 @@ public class TaskService {
         }
 
         if (labelIds != null) {
-            Set<Label> newLabels = new HashSet<>();
+            Set<Label> newLabels = null;
             if (labelIds.get() != null) {
                 newLabels = labelIds.get().stream()
                         .map(labelId -> labelRepository.findById(labelId)
