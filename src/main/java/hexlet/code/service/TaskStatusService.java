@@ -61,7 +61,7 @@ public class TaskStatusService {
 
     public void delete(Long id) {
         var status = taskStatusRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Status not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Status not Found: " + id));
 
         if (taskRepository.findByTaskStatus(status).isPresent()) {
             throw new ResourceAlreadyExistsException("Status related with some task");

@@ -6,7 +6,6 @@ import hexlet.code.dto.user.UserUpdateDTO;
 import hexlet.code.exception.ResourceAlreadyExistsException;
 import hexlet.code.exception.ResourceNotFoundException;
 import hexlet.code.mapper.UserMapper;
-import hexlet.code.model.User;
 import hexlet.code.repository.TaskRepository;
 import hexlet.code.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,13 +39,13 @@ public class UserService {
 
     public UserDTO findById(Long id) {
         var user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not Found: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + id));
         return userMapper.map(user);
     }
 
     public UserDTO update(UserUpdateDTO userUpdateDTO, Long id) {
         var user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not Found: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + id));
         userMapper.update(userUpdateDTO, user);
         userRepository.save(user);
         return userMapper.map(user);
@@ -54,8 +53,8 @@ public class UserService {
 
 
     public void delete(Long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        var user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + id));
 
         if (taskRepository.findByAssignee(user).isPresent()) {
             throw new ResourceAlreadyExistsException("User related with some task");
