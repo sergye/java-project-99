@@ -73,8 +73,8 @@ class UserControllerTest {
                 .apply(springSecurity())
                 .build();
 
-        token = jwt().jwt(builder -> builder.subject(defaultUserProperties.getEmail()));
         user = Instancio.of(modelGenerator.getUserModel()).create();
+        token = jwt().jwt(builder -> builder.subject(user.getEmail()));
         userRepository.save(user);
     }
 
